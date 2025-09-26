@@ -1,0 +1,6 @@
+.git
+.gitignore
+README.md
+GEMINI.md
+docker-compose.yml
+configs/config.local.yaml

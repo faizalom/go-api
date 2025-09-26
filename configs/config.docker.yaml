@@ -1,0 +1,6 @@
+server:
+  port: ":8080"
+jwt:
+  secret: "your-super-secret-key-should-be-changed"
+database:
+  dsn: "postgres://admin:admin@host.docker.internal:5432/workout_db?sslmode=disable"
