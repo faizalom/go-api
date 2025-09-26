@@ -17,7 +17,7 @@ import (
 func main() {
 	logger.Init()
 
-	if err := config.Load("configs/config.yaml"); err != nil {
+	if err := config.Load("../../configs/config.local.yaml"); err != nil {
 		logger.Error.Fatalf("Could not load configuration: %v", err)
 	}
 

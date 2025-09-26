@@ -46,9 +46,12 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 // GetUserByID handles the HTTP request for retrieving a user by their ID.
 func (h *UserHandler) GetUserByID(w http.ResponseWriter, r *http.Request) {
-	// In a real app, you would get the ID from the URL path, e.g., /users/{id}
-	// For this example, we'll imagine we have the ID.
-	id, _ := uuid.NewRandom() // Placeholder
+	idStr := r.PathValue("id")
+	id, err := uuid.Parse(idStr)
+	if err != nil {
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
 
 	user, err := h.service.GetUserByID(r.Context(), id)
 	if err != nil {

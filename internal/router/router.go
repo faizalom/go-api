@@ -25,7 +25,7 @@ func New(h *Handlers) *http.ServeMux {
 
 	// For this route, we are using the new enhanced routing patterns from Go 1.22+
 	// The {id} part is a wildcard that can be accessed in the handler.
-	mux.HandleFunc("GET /users/{id}", h.GetUserByID)
+	mux.HandleFunc("GET /api/v1/user/{id}", h.GetUserByID)
 
 	// Protected routes
 	mux.Handle("/api/v1/profile", protected(h.Profile))

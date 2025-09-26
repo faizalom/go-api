@@ -27,7 +27,7 @@ func NewUserService(repo *repository.UserRepository) *UserService {
 // CreateUser handles the business logic for creating a new user.
 func (s *UserService) CreateUser(ctx context.Context, req *model.NewUserRequest) (*model.User, error) {
 	// Check if user already exists
-	if _, err := s.repo.GetByEmail(ctx, req.Email); err == nil {
+	if _, _, err := s.repo.GetByEmail(ctx, req.Email); err == nil {
 		return nil, ErrUserAlreadyExists
 	}
 
