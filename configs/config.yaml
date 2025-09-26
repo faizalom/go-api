@@ -1,0 +1,9 @@
+server:
+  port: ":8080"
+
+jwt:
+  secret: "your-super-secret-key-should-be-changed"
+
+database:
+  # PostgreSQL Data Source Name (DSN)
+  dsn: "postgres://admin:admin@localhost:5432/workout_db?sslmode=disable"
