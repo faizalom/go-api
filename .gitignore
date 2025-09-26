@@ -15,7 +15,7 @@
 vendor/
 
 # Local configuration files
-config.local.yaml
+config.yaml
 .env
 
 # Log files

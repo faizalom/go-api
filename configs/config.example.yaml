@@ -1,7 +1,7 @@
 server:
-  port: "127.0.0.1:8080"
+  port: ":8080"
 jwt:
   secret: "your-super-secret-key-should-be-changed"
 database:
   # PostgreSQL Data Source Name (DSN)
-  dsn: "postgres://postgres:admin@localhost:5432/go_api?sslmode=disable"
+  dsn: "postgres://user:password@localhost:5432/workout_db?sslmode=disable"

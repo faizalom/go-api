@@ -5,6 +5,7 @@ This project is a RESTful API built in Go, developed interactively with Gemini. 
 ## Key Features
 
 *   **Clean Architecture**: Follows a layered architecture (Handler, Service, Repository) with Dependency Injection.
+*   **Modular Routing**: The routing is organized into modules, with each module handling its own dependencies.
 *   **JWT Authentication**: Secure endpoints using JWT, with token generation (`/login`) and middleware validation.
 *   **User CRUD**: Endpoints for creating, retrieving, updating, deleting, and listing users.
 *   **Configuration Management**: All settings (server port, JWT secret, database connection) are managed via a `config.yaml` file.
@@ -43,6 +44,7 @@ This project is a RESTful API built in Go, developed interactively with Gemini. 
 │   │   ├── repo_b.go
 │   │   └── user_repository.go
 │   ├── router/
+│   │   ├── dependencies.go
 │   │   ├── router.go
 │   │   └── user_router.go
 │   └── service/

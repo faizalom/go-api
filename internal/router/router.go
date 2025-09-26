@@ -1,6 +1,7 @@
 package router
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/faizalom/go-api/internal/middleware"
@@ -8,18 +9,14 @@ import (
 
 // Handlers now includes the user CRUD handlers.
 type Handlers struct {
-	Login       http.HandlerFunc
-	Profile     http.HandlerFunc
-	Example     http.HandlerFunc
-	CreateUser  http.HandlerFunc
-	GetUserByID http.HandlerFunc
-	UpdateUser  http.HandlerFunc
-	DeleteUser  http.HandlerFunc
-	ListUsers   http.HandlerFunc
+	Login   http.HandlerFunc
+	Profile http.HandlerFunc
+	Example http.HandlerFunc
 }
 
 // New creates and configures a new router, injecting the handlers.
-func New(h *Handlers) *http.ServeMux {
+func New(db *sql.DB) *http.ServeMux {
+	h := NewDependencies(db)
 	mux := http.NewServeMux()
 
 	// Create a new router for the /api/v1 prefix
@@ -29,8 +26,7 @@ func New(h *Handlers) *http.ServeMux {
 	apiV1Mux.Handle("/example", protected(h.Example))
 
 	// Mount the user router
-	apiV1Mux.Handle("/users/", http.StripPrefix("/users", UserRouter(h)))
-
+	apiV1Mux.Handle("/users/", http.StripPrefix("/users", protected(NewUserRouter(db))))
 
 	// Wrap the apiV1Mux in a handler that strips the /api/v1 prefix
 	mux.Handle("/api/v1/", http.StripPrefix("/api/v1", apiV1Mux))
