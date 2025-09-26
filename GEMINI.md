@@ -6,15 +6,18 @@ This project is a RESTful API built in Go, developed interactively with Gemini. 
 
 *   **Clean Architecture**: Follows a layered architecture (Handler, Service, Repository) with Dependency Injection.
 *   **JWT Authentication**: Secure endpoints using JWT, with token generation (`/login`) and middleware validation.
-*   **User CRUD**: Endpoints for creating and retrieving users.
+*   **User CRUD**: Endpoints for creating, retrieving, updating, deleting, and listing users.
 *   **Configuration Management**: All settings (server port, JWT secret, database connection) are managed via a `config.yaml` file.
 *   **Structured Logging**: Centralized logger with different levels (`Info`, `Error`).
 *   **Database Migrations**: Schema changes are managed through SQL migration files in the `/migrations` folder.
+*   **API Documentation**: OpenAPI 3.0 specification in `api/openapi.yaml`.
 
 ## Project Structure
 
 ```
 /workout-api/
+├── api/
+│   └── openapi.yaml
 ├── cmd/
 │   └── server/
 │       └── main.go
@@ -40,7 +43,8 @@ This project is a RESTful API built in Go, developed interactively with Gemini. 
 │   │   ├── repo_b.go
 │   │   └── user_repository.go
 │   ├── router/
-│   │   └── router.go
+│   │   ├── router.go
+│   │   └── user_router.go
 │   └── service/
 │       ├── service_a.go
 │       ├── service_b.go
@@ -59,16 +63,22 @@ This project is a RESTful API built in Go, developed interactively with Gemini. 
 
 ## API Endpoints
 
+All endpoints are prefixed with `/api/v1`.
+
 ### Public Routes
 
 *   **`POST /login`**: Simulates a user login and returns a JWT.
-*   **`POST /users`**: Creates a new user.
-*   **`GET /users/{id}`**: Retrieves a user by their ID.
 
 ### Protected Routes (Requires `Authorization: Bearer <token>`)
 
-*   **`GET /api/v1/profile`**: Returns the profile information for the authenticated user.
+*   **`GET /profile`**: Returns the profile information for the authenticated user.
 *   **`GET /example`**: An example protected route that demonstrates using multiple services.
+*   **`GET /users`**: Retrieves a list of all users.
+*   **`POST /users`**: Creates a new user.
+*   **`GET /users/{id}`**: Retrieves a user by their ID.
+*   **`PUT /users/{id}`**: Updates a user's information.
+*   **`DELETE /users/{id}`**: Deletes a user by their ID.
+
 
 ## Setup and Running the Application
 

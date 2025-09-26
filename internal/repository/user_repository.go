@@ -85,3 +85,33 @@ func (r *UserRepository) Delete(ctx context.Context, id uuid.UUID) error {
 	_, err := r.DB.ExecContext(ctx, query, id)
 	return err
 }
+
+// List retrieves a list of users from the database.
+func (r *UserRepository) List(ctx context.Context) ([]*model.User, error) {
+	query := `
+		SELECT id, name, email, is_active, created_at, updated_at
+		FROM users
+		WHERE deleted_at IS NULL
+		ORDER BY created_at DESC
+	`
+	rows, err := r.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []*model.User
+	for rows.Next() {
+		user := &model.User{}
+		if err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.IsActive, &user.CreatedAt, &user.UpdatedAt); err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}

@@ -61,6 +61,9 @@ func main() {
 		Example:     exampleHandler.HandleRequest,
 		CreateUser:  userHandler.CreateUser,
 		GetUserByID: userHandler.GetUserByID,
+		UpdateUser:  userHandler.UpdateUser,
+		DeleteUser:  userHandler.DeleteUser,
+		ListUsers:   userHandler.ListUsers,
 	}
 
 	//============================================================================

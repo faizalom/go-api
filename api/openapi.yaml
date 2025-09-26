@@ -4,7 +4,7 @@ info:
   description: A RESTful API for a workout tracking application.
   version: 1.0.0
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8080/api/v1
 paths:
   /login:
     post:
@@ -21,9 +21,25 @@ paths:
                   token:
                     type: string
   /users:
+    get:
+      summary: List all users
+      description: Retrieves a list of all users.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
     post:
       summary: Create a new user
       description: Creates a new user in the database.
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -45,6 +61,8 @@ paths:
     get:
       summary: Get a user by ID
       description: Retrieves a user by their ID.
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -61,7 +79,53 @@ paths:
                 $ref: '#/components/schemas/User'
         '404':
           description: User not found
-  /api/v1/profile:
+    put:
+      summary: Update a user
+      description: Updates a user's information.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid request body
+        '404':
+          description: User not found
+    delete:
+      summary: Delete a user
+      description: Deletes a user by their ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '24':
+          description: User deleted successfully
+        '404':
+          description: User not found
+  /profile:
     get:
       summary: Get user profile
       description: Returns the profile information for the authenticated user.
@@ -108,6 +172,14 @@ components:
         password:
           type: string
           format: password
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
   securitySchemes:
     bearerAuth:
       type: http

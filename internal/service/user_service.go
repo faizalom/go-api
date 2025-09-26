@@ -60,3 +60,42 @@ func (s *UserService) GetUserByID(ctx context.Context, id uuid.UUID) (*model.Use
 	}
 	return user, nil
 }
+
+// UpdateUser handles the business logic for updating a user.
+func (s *UserService) UpdateUser(ctx context.Context, id uuid.UUID, req *model.UpdateUserRequest) (*model.User, error) {
+	user, err := s.repo.GetByID(ctx, id)
+	if err != nil {
+		return nil, ErrUserNotFound
+	}
+
+	if req.Name != nil {
+		user.Name = *req.Name
+	}
+	if req.Email != nil {
+		user.Email = *req.Email
+	}
+
+	if err := s.repo.Update(ctx, id, user); err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// DeleteUser handles the business logic for deleting a user.
+func (s *UserService) DeleteUser(ctx context.Context, id uuid.UUID) error {
+	if _, err := s.repo.GetByID(ctx, id); err != nil {
+		return ErrUserNotFound
+	}
+
+	return s.repo.Delete(ctx, id)
+}
+
+// ListUsers retrieves a list of all users.
+func (s *UserService) ListUsers(ctx context.Context) ([]*model.User, error) {
+	users, err := s.repo.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}
