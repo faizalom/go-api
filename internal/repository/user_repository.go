@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
+	"github.com/faizalom/go-api/internal/ierr"
 	"github.com/faizalom/go-api/internal/model"
 
 	"github.com/google/uuid"
@@ -14,7 +14,7 @@ type UserRepository struct {
 	DB *sql.DB
 }
 
-func NewUserRepository(db *sql.DB) *UserRepository {
+func NewUserRepository(db *sql.DB) IUserRepository {
 	return &UserRepository{DB: db}
 }
 
@@ -39,10 +39,12 @@ func (r *UserRepository) GetByID(ctx context.Context, id uuid.UUID) (*model.User
 		FROM users
 		WHERE id = $1 AND deleted_at IS NULL
 	`
-	fmt.Println(id)
 	user := &model.User{}
 	err := r.DB.QueryRowContext(ctx, query, id).Scan(&user.ID, &user.Name, &user.Email, &user.IsActive, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ierr.ErrUserNotFound
+		}
 		return nil, err
 	}
 	return user, nil
@@ -59,6 +61,9 @@ func (r *UserRepository) GetByEmail(ctx context.Context, email string) (*model.U
 	var passwordHash string
 	err := r.DB.QueryRowContext(ctx, query, email).Scan(&user.ID, &user.Name, &user.Email, &passwordHash, &user.IsActive, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, "", ierr.ErrUserNotFound
+		}
 		return nil, "", err
 	}
 	return user, passwordHash, nil

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/faizalom/go-api/internal/ierr"
 	"github.com/faizalom/go-api/internal/model"
 	"github.com/faizalom/go-api/internal/service"
 
@@ -11,10 +12,10 @@ import (
 )
 
 type UserHandler struct {
-	service *service.UserService
+	service service.IUserService
 }
 
-func NewUserHandler(s *service.UserService) *UserHandler {
+func NewUserHandler(s service.IUserService) *UserHandler {
 	return &UserHandler{service: s}
 }
 
@@ -31,7 +32,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	createdUser, err := h.service.CreateUser(r.Context(), &req)
 	if err != nil {
 		// A more robust implementation would check the type of error
-		if err == service.ErrUserAlreadyExists {
+		if err == ierr.ErrUserAlreadyExists {
 			http.Error(w, err.Error(), http.StatusConflict)
 			return
 		}
@@ -55,7 +56,7 @@ func (h *UserHandler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.service.GetUserByID(r.Context(), id)
 	if err != nil {
-		if err == service.ErrUserNotFound {
+		if err == ierr.ErrUserNotFound {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
@@ -85,7 +86,7 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.service.UpdateUser(r.Context(), id, &req)
 	if err != nil {
-		if err == service.ErrUserNotFound {
+		if err == ierr.ErrUserNotFound {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
@@ -109,7 +110,7 @@ func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	err = h.service.DeleteUser(r.Context(), id)
 	if err != nil {
-		if err == service.ErrUserNotFound {
+		if err == ierr.ErrUserNotFound {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}

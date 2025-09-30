@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"errors"
 
+	"github.com/faizalom/go-api/internal/ierr"
 	"github.com/faizalom/go-api/internal/model"
 	"github.com/faizalom/go-api/internal/repository"
 
@@ -11,16 +11,19 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var (
-	ErrUserAlreadyExists = errors.New("user with this email already exists")
-	ErrUserNotFound      = errors.New("user not found")
-)
-
-type UserService struct {
-	repo *repository.UserRepository
+type IUserService interface {
+	CreateUser(ctx context.Context, req *model.NewUserRequest) (*model.User, error)
+	GetUserByID(ctx context.Context, id uuid.UUID) (*model.User, error)
+	UpdateUser(ctx context.Context, id uuid.UUID, req *model.UpdateUserRequest) (*model.User, error)
+	DeleteUser(ctx context.Context, id uuid.UUID) error
+	ListUsers(ctx context.Context) ([]*model.User, error)
 }
 
-func NewUserService(repo *repository.UserRepository) *UserService {
+type UserService struct {
+	repo repository.IUserRepository
+}
+
+func NewUserService(repo repository.IUserRepository) IUserService {
 	return &UserService{repo: repo}
 }
 
@@ -28,7 +31,7 @@ func NewUserService(repo *repository.UserRepository) *UserService {
 func (s *UserService) CreateUser(ctx context.Context, req *model.NewUserRequest) (*model.User, error) {
 	// Check if user already exists
 	if _, _, err := s.repo.GetByEmail(ctx, req.Email); err == nil {
-		return nil, ErrUserAlreadyExists
+		return nil, ierr.ErrUserAlreadyExists
 	}
 
 	// Hash the password
@@ -56,7 +59,7 @@ func (s *UserService) GetUserByID(ctx context.Context, id uuid.UUID) (*model.Use
 	user, err := s.repo.GetByID(ctx, id)
 	if err != nil {
 		// In a real app, you'd check for sql.ErrNoRows and return a custom error
-		return nil, ErrUserNotFound
+		return nil, ierr.ErrUserNotFound
 	}
 	return user, nil
 }
@@ -65,7 +68,7 @@ func (s *UserService) GetUserByID(ctx context.Context, id uuid.UUID) (*model.Use
 func (s *UserService) UpdateUser(ctx context.Context, id uuid.UUID, req *model.UpdateUserRequest) (*model.User, error) {
 	user, err := s.repo.GetByID(ctx, id)
 	if err != nil {
-		return nil, ErrUserNotFound
+		return nil, ierr.ErrUserNotFound
 	}
 
 	if req.Name != nil {
@@ -85,7 +88,7 @@ func (s *UserService) UpdateUser(ctx context.Context, id uuid.UUID, req *model.U
 // DeleteUser handles the business logic for deleting a user.
 func (s *UserService) DeleteUser(ctx context.Context, id uuid.UUID) error {
 	if _, err := s.repo.GetByID(ctx, id); err != nil {
-		return ErrUserNotFound
+		return ierr.ErrUserNotFound
 	}
 
 	return s.repo.Delete(ctx, id)
