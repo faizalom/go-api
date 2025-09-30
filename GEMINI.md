@@ -4,7 +4,7 @@ This project is a RESTful API built in Go, developed interactively with Gemini. 
 
 ## Key Features
 
-*   **Clean Architecture**: Follows a layered architecture (Handler, Service, Repository) with Dependency Injection.
+*   **Clean Architecture**: Follows a layered architecture (Handler, Service, Repository) with Dependency Injection. The layers are decoupled using interfaces, making the code modular and testable.
 *   **Modular Routing**: The routing is organized into modules, with each module handling its own dependencies.
 *   **JWT Authentication**: Secure endpoints using JWT, with token generation (`/login`) and middleware validation.
 *   **User CRUD**: Endpoints for creating, retrieving, updating, deleting, and listing users.
@@ -32,6 +32,8 @@ This project is a RESTful API built in Go, developed interactively with Gemini. 
 │   │   ├── example_handler.go
 │   │   ├── profile_handler.go
 │   │   └── user_handler.go
+│   ├── ierr/
+│   │   └── errors.go
 │   ├── middleware/
 │   │   ├── auth.go
 │   │   ├── logging.go
@@ -40,17 +42,23 @@ This project is a RESTful API built in Go, developed interactively with Gemini. 
 │   │   ├── claims.go
 │   │   └── user.go
 │   ├── repository/
+│   │   ├── interface.go
 │   │   ├── repo_a.go
 │   │   ├── repo_b.go
-│   │   └── user_repository.go
+│   │   ├── user_repository.go
+│   │   └── mocks/
+│   │       └── IUserRepository.go
 │   ├── router/
 │   │   ├── dependencies.go
 │   │   ├── router.go
 │   │   └── user_router.go
 │   └── service/
+│       ├── interface.go
 │       ├── service_a.go
 │       ├── service_b.go
-│       └── user_service.go
+│       ├── user_service.go
+│       └── mocks/
+│           └── IUserService.go
 ├── migrations/
 │   ├── 000001_create_users_table.down.sql
 │   └── 000001_create_users_table.up.sql

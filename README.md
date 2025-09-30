@@ -4,7 +4,7 @@ This project is a RESTful API for a workout tracking application, built in Go. I
 
 ## Features
 
-*   **Clean Architecture:** Follows a layered architecture (Handler, Service, Repository) with dependency injection.
+*   **Clean Architecture:** Follows a layered architecture (Handler, Service, Repository) with dependency injection. The layers are decoupled using interfaces, making the code modular and testable.
 *   **Modular Routing:** Routes are organized into modules, with each module handling its own dependencies.
 *   **JWT Authentication:** Endpoints are secured using JWT, with token generation (`/login`) and middleware validation.
 *   **User CRUD:** Full support for creating, retrieving, updating, deleting, and listing users.
@@ -36,7 +36,7 @@ This project is a RESTful API for a workout tracking application, built in Go. I
 3.  **Configure the Database:**
     *   Make sure your PostgreSQL server is running.
     *   Create a database (e.g., `CREATE DATABASE workout_db;`).
-    *   Copy `configs/config.example.yaml` to `configs/config.local.yaml` and update the `dsn` with your database credentials.
+    *   Copy `configs/config.example.yaml` to `configs/config.yaml` and update the `dsn` with your database credentials.
 
 4.  **Run Database Migrations:**
     ```sh
